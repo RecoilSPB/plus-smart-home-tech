@@ -9,9 +9,9 @@ import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScenarioAddedEvent extends HubEvent {
-    private String name;
-    private List<ScenarioCondition> conditions;
-    private List<DeviceAction> actions;
+    String name;
+    List<ScenarioCondition> conditions;
+    List<DeviceAction> actions;
 
     @Override
     public String getType() {

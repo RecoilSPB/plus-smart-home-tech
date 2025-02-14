@@ -24,9 +24,9 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class HubEvent {
     @NotBlank
-    protected String hubId;
+    String hubId;
 
-    protected Instant timestamp;
+    Instant timestamp;
 
     public abstract String getType();
 }

@@ -6,8 +6,8 @@ import ru.yandex.practicum.kafka.telemetry.event.DeviceType;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceAddedEvent extends HubEvent {
-    private String id;
-    private DeviceType type;
+    String id;
+    DeviceType type;
 
     @Override
     public String getType() {

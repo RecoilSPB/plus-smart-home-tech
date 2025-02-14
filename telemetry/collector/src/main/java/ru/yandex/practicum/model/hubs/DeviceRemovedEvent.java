@@ -5,7 +5,7 @@ import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceRemovedEvent extends HubEvent {
-    private String id;
+    String id;
 
     @Override
     public String getType() {
