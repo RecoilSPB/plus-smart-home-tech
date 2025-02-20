@@ -1,12 +1,12 @@
 package ru.yandex.practicum.model.hubs;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import ru.yandex.practicum.kafka.telemetry.event.DeviceAction;
-import ru.yandex.practicum.kafka.telemetry.event.ScenarioCondition;
 
 import java.util.List;
 
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScenarioAddedEvent extends HubEvent {
     String name;
@@ -14,7 +14,7 @@ public class ScenarioAddedEvent extends HubEvent {
     List<DeviceAction> actions;
 
     @Override
-    public String getType() {
-        return "SCENARIO_ADDED";
+    public HubEventType getType() {
+        return HubEventType.SCENARIO_ADDED;
     }
 }

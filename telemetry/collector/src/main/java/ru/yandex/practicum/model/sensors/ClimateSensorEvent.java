@@ -1,8 +1,10 @@
 package ru.yandex.practicum.model.sensors;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClimateSensorEvent extends SensorEvent {
     int temperatureC;
@@ -10,7 +12,7 @@ public class ClimateSensorEvent extends SensorEvent {
     int co2Level;
 
     @Override
-    public String getType() {
-        return "CLIMATE_SENSOR_EVENT";
+    public SensorEventType getType() {
+        return SensorEventType.CLIMATE_SENSOR_EVENT;
     }
 }

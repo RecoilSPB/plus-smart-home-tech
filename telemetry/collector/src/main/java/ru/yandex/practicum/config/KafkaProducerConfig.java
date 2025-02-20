@@ -1,47 +1,28 @@
 package ru.yandex.practicum.config;
 
-
+import lombok.RequiredArgsConstructor;
+import org.apache.avro.specific.SpecificRecordBase;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.DefaultKafkaProducerFactory;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.yandex.practicum.model.hubs.HubEvent;
-import ru.yandex.practicum.model.sensors.SensorEvent;
 
-import java.util.Map;
+import java.util.Properties;
 
 @Configuration
+@RequiredArgsConstructor
 public class KafkaProducerConfig {
+    private final KafkaProducerProperties kafkaProperties;
 
-    private Map<String, Object> producerConfigs() {
-        return Map.of(
-                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
-                ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class,
-                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class
-        );
-    }
+    @Bean(destroyMethod = "close")
+    public Producer<String, SpecificRecordBase> producer() {
+        Properties properties = new Properties();
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
+        properties.put(ProducerConfig.CLIENT_ID_CONFIG, kafkaProperties.getClientId());
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProperties.getProducerKeySerializer());
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProperties.getProducerValueSerializer());
 
-    @Bean
-    public ProducerFactory<String, SensorEvent> sensorProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
-    }
-
-    @Bean
-    public KafkaTemplate<String, SensorEvent> sensorKafkaTemplate() {
-        return new KafkaTemplate<>(sensorProducerFactory());
-    }
-
-    @Bean
-    public ProducerFactory<String, HubEvent> hubProducerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
-    }
-
-    @Bean
-    public KafkaTemplate<String, HubEvent> hubKafkaTemplate() {
-        return new KafkaTemplate<>(hubProducerFactory());
+        return new KafkaProducer<>(properties);
     }
 }

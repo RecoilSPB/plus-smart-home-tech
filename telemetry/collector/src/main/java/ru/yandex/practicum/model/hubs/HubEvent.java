@@ -28,5 +28,5 @@ public abstract class HubEvent {
 
     Instant timestamp;
 
-    public abstract String getType();
+    public abstract HubEventType getType();
 }

@@ -32,5 +32,5 @@ public abstract class SensorEvent {
 
     Instant timestamp;
 
-    public abstract String getType();
+    public abstract SensorEventType getType();
 }
