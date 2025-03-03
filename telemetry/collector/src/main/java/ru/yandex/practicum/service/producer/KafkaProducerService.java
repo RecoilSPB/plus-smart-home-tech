@@ -7,26 +7,29 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.config.KafkaProducerProperties;
-import ru.yandex.practicum.mapper.HubEventMapper;
-import ru.yandex.practicum.mapper.SensorEventMapper;
+import ru.yandex.practicum.mapper.avro.HubEventMapper;
+import ru.yandex.practicum.mapper.avro.SensorEventMapper;
 import ru.yandex.practicum.model.sensors.SensorEvent;
 import ru.yandex.practicum.model.hubs.HubEvent;
+import ru.yandex.practicum.service.EventService;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KafkaProducerService {
+public class KafkaProducerService implements EventService {
     private final Producer<String, SpecificRecordBase> producer;
     private final KafkaProducerProperties kafkaProperties;
 
-    public void sendSensorEvent(SensorEvent sensorEvent) {
+    @Override
+    public void processSensorEvent(SensorEvent sensorEvent) {
         send(kafkaProperties.getSensorEventsTopic(),
                 sensorEvent.getHubId(),
                 sensorEvent.getTimestamp().toEpochMilli(),
                 SensorEventMapper.toSensorEventAvro(sensorEvent));
     }
 
-    public void sendHubEvent(HubEvent hubEvent) {
+    @Override
+    public void processHubEvent(HubEvent hubEvent) {
         send(kafkaProperties.getHubEventsTopic(),
                 hubEvent.getHubId(),
                 hubEvent.getTimestamp().toEpochMilli(),

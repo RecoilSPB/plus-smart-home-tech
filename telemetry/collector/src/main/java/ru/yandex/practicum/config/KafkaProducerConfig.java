@@ -5,6 +5,7 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +13,7 @@ import java.util.Properties;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableConfigurationProperties(KafkaProducerProperties.class)
 public class KafkaProducerConfig {
     private final KafkaProducerProperties kafkaProperties;
 

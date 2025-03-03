@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import ru.yandex.practicum.config.KafkaProducerProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(KafkaProducerProperties.class)
 public class TelemetryApplication {
     public static void main(String[] args) {
         SpringApplication.run(TelemetryApplication.class, args);

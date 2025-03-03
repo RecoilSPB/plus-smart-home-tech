@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
@@ -21,6 +22,7 @@ import java.time.Instant;
         @JsonSubTypes.Type(value = ClimateSensorEvent.class, name = "CLIMATE_SENSOR_EVENT"),
         @JsonSubTypes.Type(value = SwitchSensorEvent.class, name = "SWITCH_SENSOR_EVENT")
 })
+@SuperBuilder(toBuilder = true)
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class SensorEvent {
