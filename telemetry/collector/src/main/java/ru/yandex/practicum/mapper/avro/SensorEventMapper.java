@@ -1,4 +1,4 @@
-package ru.yandex.practicum.mapper;
+package ru.yandex.practicum.mapper.avro;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import ru.yandex.practicum.kafka.telemetry.event.*;
@@ -11,7 +11,7 @@ public class SensorEventMapper {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(sensorEvent.getTimestamp().toEpochMilli())
+                .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(toSensorEventPayloadAvro(sensorEvent))
                 .build();
     }

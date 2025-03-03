@@ -1,4 +1,4 @@
-package ru.yandex.practicum.mapper;
+package ru.yandex.practicum.mapper.avro;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import ru.yandex.practicum.kafka.telemetry.event.*;
@@ -12,7 +12,7 @@ public class HubEventMapper {
     public static HubEventAvro toHubEventAvro(HubEvent hubEvent) {
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(hubEvent.getTimestamp().toEpochMilli())
+                .setTimestamp(hubEvent.getTimestamp())
                 .setPayload(toHubEventPayloadAvro(hubEvent))
                 .build();
     }

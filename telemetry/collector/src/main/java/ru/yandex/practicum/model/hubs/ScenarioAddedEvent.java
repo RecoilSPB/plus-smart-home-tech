@@ -3,9 +3,11 @@ package ru.yandex.practicum.model.hubs;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+@SuperBuilder(toBuilder = true)
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScenarioAddedEvent extends HubEvent {
