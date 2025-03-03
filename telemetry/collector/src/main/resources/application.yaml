@@ -1,0 +1,8 @@
+kafka:
+  config:
+    bootstrap-servers: localhost:9092
+    client-id: producer-1
+    producer-key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    producer-value-serializer: ru.yandex.practicum.serializer.AvroSerializer
+    sensor-events-topic: telemetry.sensors.v1
+    hub-events-topic: telemetry.hubs.v1
