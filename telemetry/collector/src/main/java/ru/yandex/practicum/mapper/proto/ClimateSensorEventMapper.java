@@ -1,7 +1,7 @@
 package ru.yandex.practicum.mapper.proto;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.model.sensors.ClimateSensorEvent;
 import ru.yandex.practicum.model.sensors.SensorEvent;
@@ -17,7 +17,7 @@ public class ClimateSensorEventMapper implements SensorEventProtoMapper {
 
     @Override
     public SensorEvent map(SensorEventProto event) {
-        ClimateSensorEventProto sensorEvent = event.getClimateSensorEvent();
+        ClimateSensorProto sensorEvent = event.getClimateSensorEvent();
 
         return ClimateSensorEvent.builder()
                 .id(event.getId())

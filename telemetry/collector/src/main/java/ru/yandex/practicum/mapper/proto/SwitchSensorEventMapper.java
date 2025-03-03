@@ -2,7 +2,7 @@ package ru.yandex.practicum.mapper.proto;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
-import ru.yandex.practicum.grpc.telemetry.event.SwitchSensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.SwitchSensorProto;
 import ru.yandex.practicum.model.sensors.SensorEvent;
 import ru.yandex.practicum.model.sensors.SwitchSensorEvent;
 
@@ -17,7 +17,7 @@ public class SwitchSensorEventMapper implements SensorEventProtoMapper {
 
     @Override
     public SensorEvent map(SensorEventProto event) {
-        SwitchSensorEventProto sensorEvent = event.getSwitchSensorEvent();
+        SwitchSensorProto sensorEvent = event.getSwitchSensorEvent();
 
         return SwitchSensorEvent.builder()
                 .id(event.getId())

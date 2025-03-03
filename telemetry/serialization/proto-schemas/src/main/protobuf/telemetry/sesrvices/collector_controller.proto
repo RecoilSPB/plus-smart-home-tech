@@ -12,8 +12,8 @@ import "telemetry/messages/sensor_event.proto";
 // Сервис CollectorController для обработки событий
 service CollectorController {
   // Метод для отправки события хаба
-  rpc CollectHubEvent (telemetry.message.event.HubEventProto) returns (google.protobuf.Empty);
+  rpc CollectHubEvent (message.event.HubEventProto) returns (google.protobuf.Empty);
 
   // Метод для отправки события сенсора
-  rpc CollectSensorEvent (telemetry.message.event.SensorEventProto) returns (google.protobuf.Empty);
+  rpc CollectSensorEvent (message.event.SensorEventProto) returns (google.protobuf.Empty);
 }

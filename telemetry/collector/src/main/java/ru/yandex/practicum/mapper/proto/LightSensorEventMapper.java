@@ -1,7 +1,7 @@
 package ru.yandex.practicum.mapper.proto;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.grpc.telemetry.event.LightSensorEventProto;
+import ru.yandex.practicum.grpc.telemetry.event.LightSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.model.sensors.LightSensorEvent;
 import ru.yandex.practicum.model.sensors.SensorEvent;
@@ -17,7 +17,7 @@ public class LightSensorEventMapper implements SensorEventProtoMapper {
 
     @Override
     public SensorEvent map(SensorEventProto event) {
-        LightSensorEventProto sensorEvent = event.getLightSensorEvent();
+        LightSensorProto sensorEvent = event.getLightSensorEvent();
 
         return LightSensorEvent.builder()
                 .id(event.getId())

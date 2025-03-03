@@ -9,8 +9,3 @@ kafka:
     producer-value-serializer: ru.yandex.practicum.serializer.AvroSerializer
     sensor-events-topic: telemetry.sensors.v1
     hub-events-topic: telemetry.hubs.v1
-logging:
-  level:
-    root: trace
-  file:
-    name: ./collector.log
