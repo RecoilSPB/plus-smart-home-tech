@@ -25,6 +25,8 @@ public class AvroSerializer implements Serializer<SpecificRecordBase> {
             return null;
         }
 
+        log.info(data.toString());
+
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             BinaryEncoder encoder = encoderFactory.binaryEncoder(out, null);
             DatumWriter<SpecificRecordBase> writer = new SpecificDatumWriter<>(data.getSchema());
