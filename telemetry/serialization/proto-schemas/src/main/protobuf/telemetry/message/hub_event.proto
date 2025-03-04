@@ -8,11 +8,11 @@ option java_package = "ru.yandex.practicum.grpc.telemetry.event";
 import "google/protobuf/timestamp.proto";
 
 enum DeviceTypeProto {
-  MOTION_SENSOR_EVENT = 0;
-  TEMPERATURE_SENSOR_EVENT = 1;
-  LIGHT_SENSOR_EVENT = 2;
-  CLIMATE_SENSOR_EVENT = 3;
-  SWITCH_SENSOR_EVENT = 4;
+  MOTION_SENSOR = 0;
+  TEMPERATURE_SENSOR = 1;
+  LIGHT_SENSOR = 2;
+  CLIMATE_SENSOR = 3;
+  SWITCH_SENSOR = 4;
 }
 
 // Типы условий для сценариев

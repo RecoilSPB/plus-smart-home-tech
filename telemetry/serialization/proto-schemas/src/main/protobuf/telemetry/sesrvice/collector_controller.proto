@@ -6,8 +6,8 @@ option java_multiple_files = true;
 option java_package = "ru.yandex.practicum.grpc.telemetry.service.collector";
 
 import "google/protobuf/empty.proto";
-import "telemetry/messages/hub_event.proto";
-import "telemetry/messages/sensor_event.proto";
+import "telemetry/message/hub_event.proto";
+import "telemetry/message/sensor_event.proto";
 
 // Сервис CollectorController для обработки событий
 service CollectorController {
