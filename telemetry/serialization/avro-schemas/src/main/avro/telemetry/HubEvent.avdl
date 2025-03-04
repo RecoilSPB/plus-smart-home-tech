@@ -57,7 +57,6 @@ protocol HubEventProtocol {
         string name;
         array<ScenarioConditionAvro> conditions;
         array<DeviceActionAvro> actions;
-        union { null, int, boolean } value = null;
     }
 
     record ScenarioRemovedEventAvro {
