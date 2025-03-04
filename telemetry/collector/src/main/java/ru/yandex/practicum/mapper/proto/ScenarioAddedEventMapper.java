@@ -39,11 +39,28 @@ public class ScenarioAddedEventMapper implements HubEventProtoMapper {
     }
 
     private ScenarioCondition map(ScenarioConditionProto scenarioConditionProto) {
-        return ScenarioCondition.builder()
+        if (scenarioConditionProto == null) {
+            throw new IllegalArgumentException("ScenarioConditionProto cannot be null");
+        }
+
+        ScenarioCondition.ScenarioConditionBuilder builder = ScenarioCondition.builder()
                 .sensorId(scenarioConditionProto.getSensorId())
                 .conditionType(ConditionType.valueOf(scenarioConditionProto.getType().name()))
-                .conditionOperation(ConditionOperation.valueOf(scenarioConditionProto.getOperation().name()))
-                .value(scenarioConditionProto.getIntValue())
-                .build();
+                .conditionOperation(ConditionOperation.valueOf(scenarioConditionProto.getOperation().name()));
+
+        // Обработка oneof поля value
+        switch (scenarioConditionProto.getValueCase()) {
+            case BOOL_VALUE:
+                builder.value(scenarioConditionProto.getBoolValue());
+                break;
+            case INT_VALUE:
+                builder.value(scenarioConditionProto.getIntValue());
+                break;
+            case VALUE_NOT_SET:
+            default:
+                throw new IllegalArgumentException("Value is not set or unknown in ScenarioConditionProto");
+        }
+
+        return builder.build();
     }
 }

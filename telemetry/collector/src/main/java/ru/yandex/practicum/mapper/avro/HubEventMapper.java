@@ -1,19 +1,22 @@
 package ru.yandex.practicum.mapper.avro;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.model.hubs.*;
 import ru.yandex.practicum.model.hubs.ActionType;
 
 import java.util.Objects;
-
+@Slf4j
 public class HubEventMapper {
 
     public static HubEventAvro toHubEventAvro(HubEvent hubEvent) {
+        SpecificRecordBase hubEventPayloadAvro = toHubEventPayloadAvro(hubEvent);
+        log.info("Отправляем в Kafka: \n" + hubEventPayloadAvro.toString());
         return HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(hubEvent.getTimestamp())
-                .setPayload(toHubEventPayloadAvro(hubEvent))
+                .setPayload(hubEventPayloadAvro)
                 .build();
     }
 
