@@ -11,7 +11,7 @@ public class SensorEventMapper {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(sensorEvent.getTimestamp().toEpochMilli())
+                .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(toSensorEventPayloadAvro(sensorEvent))
                 .build();
     }
