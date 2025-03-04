@@ -8,14 +8,14 @@ option java_package = "ru.yandex.practicum.grpc.telemetry.event";
 import "google/protobuf/timestamp.proto";
 
 enum DeviceTypeProto {
-  MOTION_SENSOR_EVENT = 0;
-  TEMPERATURE_SENSOR_EVENT = 1;
-  LIGHT_SENSOR_EVENT = 2;
-  CLIMATE_SENSOR_EVENT = 3;
-  SWITCH_SENSOR_EVENT = 4;
+  // Варианты значений enum DeviceTypeProto
+  MOTION_SENSOR = 0;      // датчик движения
+  TEMPERATURE_SENSOR = 1; // датчик температуры
+  LIGHT_SENSOR = 2;       // датчик освещённости
+  CLIMATE_SENSOR = 3;     // датчик контроля климата
+  SWITCH_SENSOR = 4;      // переключатель
 }
 
-// Типы условий для сценариев
 enum ConditionTypeProto {
   MOTION = 0;
   LUMINOSITY = 1;
@@ -25,14 +25,12 @@ enum ConditionTypeProto {
   HUMIDITY = 5;
 }
 
-// Операции для условий
 enum ConditionOperationProto {
   EQUALS = 0;
   GREATER_THAN = 1;
   LOWER_THAN = 2;
 }
 
-// Типы действий для сценариев
 enum ActionTypeProto {
   ACTIVATE = 0;
   DEACTIVATE = 1;
@@ -40,48 +38,48 @@ enum ActionTypeProto {
   SET_VALUE = 3;
 }
 
-// Условие сценария
-message ScenarioConditionProto {
-  string sensor_id = 1;
-  ConditionTypeProto type = 2;
-  ConditionOperationProto operation = 3;
-  oneof value {
-    int32 int_value = 4;
-    bool bool_value = 5;
-  }
-}
-
-// Действие устройства
-message DeviceActionProto {
-  string sensor_id = 1;
-  ActionTypeProto type = 2;
-  int32 value = 3;
-}
-
-// Событие добавления устройства
 message DeviceAddedEventProto {
   string id = 1;
   DeviceTypeProto type = 2;
 }
 
-// Событие удаления устройства
 message DeviceRemovedEventProto {
   string id = 1;
 }
 
-// Событие добавления сценария
-message ScenarioAddedEventProto {
-  string name = 1;
-  repeated ScenarioConditionProto conditions = 2;
-  repeated DeviceActionProto actions = 3;
+message DeviceActionProto {
+  string sensor_id = 1;
+  ActionTypeProto type = 2;
+  optional int32 value = 3;
 }
 
-// Событие удаления сценария
+message ScenarioConditionProto {
+  string sensor_id = 1;
+  ConditionTypeProto type = 2;
+  ConditionOperationProto operation = 3;
+  oneof value {
+    bool bool_value = 4;
+    int32 int_value = 5;
+  }
+}
+
+message ScenarioAddedEventProto {
+  string name = 1;
+  repeated ScenarioConditionProto condition = 2;
+  repeated DeviceActionProto action = 3;
+}
+
 message ScenarioRemovedEventProto {
   string name = 1;
 }
 
-// Общее событие хаба
+message DeviceActionRequest {
+  string hub_id = 1;
+  string scenario_name = 2;
+  DeviceActionProto action = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
 message HubEventProto {
   string hub_id = 1;
   google.protobuf.Timestamp timestamp = 2;
