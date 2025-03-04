@@ -4,6 +4,7 @@ import com.google.protobuf.Empty;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
@@ -18,6 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @GrpcService
+@Slf4j
 public class EventController extends CollectorControllerGrpc.CollectorControllerImplBase {
     private final Map<SensorEventProto.PayloadCase, SensorEventProtoMapper> sensorEventMappers;
     private final Map<HubEventProto.PayloadCase, HubEventProtoMapper> hubEventMappers;
@@ -43,6 +45,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
         try {
             SensorEventProto.PayloadCase sensorEventTypeProto = request.getPayloadCase();
+            log.info(sensorEventTypeProto.name());
             if (sensorEventMappers.containsKey(sensorEventTypeProto)) {
                 eventService.processSensorEvent(sensorEventMappers.get(sensorEventTypeProto).map(request));
             } else {

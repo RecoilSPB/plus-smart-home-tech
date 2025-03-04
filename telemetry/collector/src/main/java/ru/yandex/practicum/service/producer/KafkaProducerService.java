@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.config.KafkaProducerProperties;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 import ru.yandex.practicum.mapper.avro.HubEventMapper;
 import ru.yandex.practicum.mapper.avro.SensorEventMapper;
 import ru.yandex.practicum.model.sensors.SensorEvent;
@@ -22,10 +23,13 @@ public class KafkaProducerService implements EventService {
 
     @Override
     public void processSensorEvent(SensorEvent sensorEvent) {
+        log.info(String.valueOf(sensorEvent.getClass()));
+        SensorEventAvro sensorEventAvro = SensorEventMapper.toSensorEventAvro(sensorEvent);
+        log.info(String.valueOf(sensorEventAvro.toString()));
         send(kafkaProperties.getSensorEventsTopic(),
                 sensorEvent.getHubId(),
                 sensorEvent.getTimestamp().toEpochMilli(),
-                SensorEventMapper.toSensorEventAvro(sensorEvent));
+                sensorEventAvro);
     }
 
     @Override
