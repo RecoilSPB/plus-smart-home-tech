@@ -1,5 +1,6 @@
 package ru.yandex.practicum.mapper.proto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.model.sensors.SensorEvent;
 import ru.yandex.practicum.model.sensors.TemperatureSensorEvent;
@@ -8,6 +9,7 @@ import ru.yandex.practicum.grpc.telemetry.event.TemperatureSensorProto;
 
 import java.time.Instant;
 
+@Slf4j
 @Component
 public class TemperatureSensorEventMapper implements SensorEventProtoMapper {
     @Override
@@ -27,7 +29,7 @@ public class TemperatureSensorEventMapper implements SensorEventProtoMapper {
                 .temperatureF(sensorEvent.getTemperatureF())
                 .build();
 
-        System.out.println("temperatureSensorEvent = " + temperatureSensorEvent);
+        log.info("temperatureSensorEvent = " + temperatureSensorEvent);
         return temperatureSensorEvent;
     }
 }

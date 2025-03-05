@@ -1,5 +1,6 @@
 package ru.yandex.practicum.mapper.proto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.model.sensors.SensorEvent;
 import ru.yandex.practicum.model.sensors.SwitchSensorEvent;
@@ -8,6 +9,7 @@ import ru.yandex.practicum.grpc.telemetry.event.SwitchSensorProto;
 
 import java.time.Instant;
 
+@Slf4j
 @Component
 public class SwitchSensorEventMapper implements SensorEventProtoMapper {
     @Override
@@ -26,7 +28,7 @@ public class SwitchSensorEventMapper implements SensorEventProtoMapper {
                 .state(sensorEvent.getState())
                 .build();
 
-        System.out.println("switchSensorEvent = " + switchSensorEvent);
+        log.info("switchSensorEvent = " + switchSensorEvent);
         return switchSensorEvent;
     }
 }

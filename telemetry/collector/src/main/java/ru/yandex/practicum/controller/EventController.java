@@ -4,6 +4,7 @@ import com.google.protobuf.Empty;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.server.service.GrpcService;
 import ru.yandex.practicum.grpc.telemetry.collector.CollectorControllerGrpc;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
@@ -17,6 +18,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Slf4j
 @GrpcService
 public class EventController extends CollectorControllerGrpc.CollectorControllerImplBase {
     private final Map<SensorEventProto.PayloadCase, SensorEventProtoMapper> sensorEventMappers;
@@ -42,6 +44,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     @Override
     public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
         try {
+            log.info("Получен запрос: \n" + request);
             if (sensorEventMappers.containsKey(request.getPayloadCase())) {
                 eventService.collectSensorEvent(sensorEventMappers.get(request.getPayloadCase()).map(request));
             } else {
@@ -61,6 +64,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     @Override
     public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
         try {
+            log.info("Получен запрос: \n" + request);
             if (hubEventMappers.containsKey(request.getPayloadCase())) {
                 eventService.collectHubEvent(hubEventMappers.get(request.getPayloadCase()).map(request));
             } else {

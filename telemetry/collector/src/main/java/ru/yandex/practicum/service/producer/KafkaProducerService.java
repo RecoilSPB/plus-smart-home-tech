@@ -37,6 +37,7 @@ public class KafkaProducerService implements EventService {
     }
 
     private void send(String topic, String key, Long timestamp, SpecificRecordBase specificRecordBase) {
+        log.info("Sending {} to {}", specificRecordBase, topic);
         ProducerRecord<String, SpecificRecordBase> rec = new ProducerRecord<>(
                 topic,
                 null,

@@ -1,13 +1,15 @@
 package ru.yandex.practicum.mapper.proto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.model.sensors.ClimateSensorEvent;
-import ru.yandex.practicum.model.sensors.SensorEvent;
 import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
+import ru.yandex.practicum.model.sensors.ClimateSensorEvent;
+import ru.yandex.practicum.model.sensors.SensorEvent;
 
 import java.time.Instant;
 
+@Slf4j
 @Component
 public class ClimateSensorEventMapper implements SensorEventProtoMapper {
     @Override
@@ -27,6 +29,7 @@ public class ClimateSensorEventMapper implements SensorEventProtoMapper {
                 .co2Level(sensorEvent.getCo2Level())
                 .humidity(sensorEvent.getHumidity())
                 .build();
+        log.info("climateSensorEvent = " + climateSensorEvent);
         return climateSensorEvent;
     }
 }

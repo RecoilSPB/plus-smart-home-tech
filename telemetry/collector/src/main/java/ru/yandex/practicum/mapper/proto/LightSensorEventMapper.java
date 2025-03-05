@@ -1,5 +1,6 @@
 package ru.yandex.practicum.mapper.proto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.model.sensors.LightSensorEvent;
 import ru.yandex.practicum.model.sensors.SensorEvent;
@@ -8,6 +9,7 @@ import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 
 import java.time.Instant;
 
+@Slf4j
 @Component
 public class LightSensorEventMapper implements SensorEventProtoMapper {
     @Override
@@ -26,6 +28,7 @@ public class LightSensorEventMapper implements SensorEventProtoMapper {
                 .linkQuality(sensorEvent.getLinkQuality())
                 .luminosity(sensorEvent.getLuminosity())
                 .build();
+        log.info("lightSensorEvent = " + lightSensorEvent);
         return lightSensorEvent;
     }
 }
