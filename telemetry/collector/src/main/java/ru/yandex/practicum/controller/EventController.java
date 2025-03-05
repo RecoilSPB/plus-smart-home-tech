@@ -44,7 +44,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     @Override
     public void collectSensorEvent(SensorEventProto request, StreamObserver<Empty> responseObserver) {
         try {
-            log.info("Получен запрос: \n" + request);
+            log.info("Получен запрос: \n" + request.getAllFields());
             if (sensorEventMappers.containsKey(request.getPayloadCase())) {
                 eventService.collectSensorEvent(sensorEventMappers.get(request.getPayloadCase()).map(request));
             } else {
