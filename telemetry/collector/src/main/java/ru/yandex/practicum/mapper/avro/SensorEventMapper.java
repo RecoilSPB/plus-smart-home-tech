@@ -1,4 +1,4 @@
-package ru.yandex.practicum.mapper;
+package ru.yandex.practicum.mapper.avro;
 
 import org.apache.avro.specific.SpecificRecordBase;
 import ru.yandex.practicum.kafka.telemetry.event.*;
@@ -11,14 +11,14 @@ public class SensorEventMapper {
         return SensorEventAvro.newBuilder()
                 .setId(sensorEvent.getId())
                 .setHubId(sensorEvent.getHubId())
-                .setTimestamp(sensorEvent.getTimestamp().toEpochMilli())
+                .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(toSensorEventPayloadAvro(sensorEvent))
                 .build();
     }
 
     public static SpecificRecordBase toSensorEventPayloadAvro(SensorEvent sensorEvent) {
         switch (sensorEvent.getType()) {
-            case MOTION_SENSOR_EVENT -> {
+            case MOTION_SENSOR -> {
                 MotionSensorEvent event = (MotionSensorEvent) sensorEvent;
                 return MotionSensorAvro.newBuilder()
                         .setLinkQuality(event.getLinkQuality())
@@ -27,7 +27,7 @@ public class SensorEventMapper {
                         .build();
             }
 
-            case CLIMATE_SENSOR_EVENT -> {
+            case CLIMATE_SENSOR -> {
                 ClimateSensorEvent event = (ClimateSensorEvent) sensorEvent;
                 return ClimateSensorAvro.newBuilder()
                         .setTemperatureC(event.getTemperatureC())
@@ -36,7 +36,7 @@ public class SensorEventMapper {
                         .build();
             }
 
-            case LIGHT_SENSOR_EVENT -> {
+            case LIGHT_SENSOR -> {
                 LightSensorEvent event = (LightSensorEvent) sensorEvent;
                 return LightSensorAvro.newBuilder()
                         .setLinkQuality(event.getLinkQuality())
@@ -44,14 +44,14 @@ public class SensorEventMapper {
                         .build();
             }
 
-            case SWITCH_SENSOR_EVENT -> {
+            case SWITCH_SENSOR -> {
                 SwitchSensorEvent event = (SwitchSensorEvent) sensorEvent;
                 return SwitchSensorAvro.newBuilder()
                         .setState(event.isState())
                         .build();
             }
 
-            case TEMPERATURE_SENSOR_EVENT -> {
+            case TEMPERATURE_SENSOR -> {
                 TemperatureSensorEvent event = (TemperatureSensorEvent) sensorEvent;
                 return TemperatureSensorAvro.newBuilder()
                         .setTemperatureC(event.getTemperatureC())

@@ -1,20 +1,24 @@
-package ru.yandex.practicum.mapper;
+package ru.yandex.practicum.mapper.avro;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import ru.yandex.practicum.kafka.telemetry.event.*;
 import ru.yandex.practicum.model.hubs.*;
-import ru.yandex.practicum.model.hubs.ActionType;
 
 import java.util.Objects;
 
+@Slf4j
 public class HubEventMapper {
 
     public static HubEventAvro toHubEventAvro(HubEvent hubEvent) {
-        return HubEventAvro.newBuilder()
+        SpecificRecordBase hubEventPayloadAvro = toHubEventPayloadAvro(hubEvent);
+        HubEventAvro build = HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
-                .setTimestamp(hubEvent.getTimestamp().toEpochMilli())
-                .setPayload(toHubEventPayloadAvro(hubEvent))
+                .setTimestamp(hubEvent.getTimestamp())
+                .setPayload(hubEventPayloadAvro)
                 .build();
+        log.info(build.toString());
+        return build;
     }
 
     public static SpecificRecordBase toHubEventPayloadAvro(HubEvent hubEvent) {
@@ -30,30 +34,38 @@ public class HubEventMapper {
     }
 
     private static DeviceAddedEventAvro mapDeviceAdded(DeviceAddedEvent event) {
-        return DeviceAddedEventAvro.newBuilder()
+        DeviceAddedEventAvro build = DeviceAddedEventAvro.newBuilder()
                 .setId(event.getId())
                 .setType(toDeviceTypeAvro(event.getDeviceType()))
                 .build();
+        log.info(build.toString());
+        return build;
     }
 
     private static DeviceRemovedEventAvro mapDeviceRemoved(DeviceRemovedEvent event) {
-        return DeviceRemovedEventAvro.newBuilder()
+        DeviceRemovedEventAvro build = DeviceRemovedEventAvro.newBuilder()
                 .setId(event.getId())
                 .build();
+        log.info(build.toString());
+        return build;
     }
 
     private static ScenarioAddedEventAvro mapScenarioAdded(ScenarioAddedEvent event) {
-        return ScenarioAddedEventAvro.newBuilder()
+        ScenarioAddedEventAvro build = ScenarioAddedEventAvro.newBuilder()
                 .setName(event.getName())
                 .setActions(event.getActions().stream().map(HubEventMapper::toDeviceActionAvro).toList())
                 .setConditions(event.getConditions().stream().map(HubEventMapper::toScenarioConditionAvro).toList())
                 .build();
+        log.info(build.toString());
+        return build;
     }
 
     private static ScenarioRemovedEventAvro mapScenarioRemoved(ScenarioRemovedEvent event) {
-        return ScenarioRemovedEventAvro.newBuilder()
+        ScenarioRemovedEventAvro build = ScenarioRemovedEventAvro.newBuilder()
                 .setName(event.getName())
                 .build();
+        log.info(build.toString());
+        return build;
     }
 
     public static DeviceTypeAvro toDeviceTypeAvro(DeviceType deviceType) {
@@ -61,11 +73,13 @@ public class HubEventMapper {
     }
 
     public static DeviceActionAvro toDeviceActionAvro(DeviceAction deviceAction) {
-        return DeviceActionAvro.newBuilder()
+        DeviceActionAvro build = DeviceActionAvro.newBuilder()
                 .setSensorId(deviceAction.getSensorId())
                 .setType(toActionTypeAvro(deviceAction.getType()))
                 .setValue(deviceAction.getValue())
                 .build();
+        log.info(build.toString());
+        return build;
     }
 
     public static ActionTypeAvro toActionTypeAvro(ActionType actionType) {
@@ -81,11 +95,13 @@ public class HubEventMapper {
     }
 
     public static ScenarioConditionAvro toScenarioConditionAvro(ScenarioCondition scenarioCondition) {
-        return ScenarioConditionAvro.newBuilder()
+        ScenarioConditionAvro build = ScenarioConditionAvro.newBuilder()
                 .setSensorId(scenarioCondition.getSensorId())
                 .setType(toConditionTypeAvro(scenarioCondition.getConditionType()))
                 .setOperation(toConditionOperationAvro(scenarioCondition.getConditionOperation()))
                 .setValue(scenarioCondition.getValue())
                 .build();
+        log.info(build.toString());
+        return build;
     }
 }

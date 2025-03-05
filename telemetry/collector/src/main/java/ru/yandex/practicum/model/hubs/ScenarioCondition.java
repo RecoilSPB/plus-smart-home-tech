@@ -2,14 +2,11 @@ package ru.yandex.practicum.model.hubs;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Getter
-@Setter
+@Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScenarioCondition {
@@ -24,5 +21,5 @@ public class ScenarioCondition {
     ConditionOperation conditionOperation;
 
     @NotNull
-    Integer value;
+    Object value;
 }
