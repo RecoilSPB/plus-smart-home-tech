@@ -64,7 +64,7 @@ public class EventController extends CollectorControllerGrpc.CollectorController
     @Override
     public void collectHubEvent(HubEventProto request, StreamObserver<Empty> responseObserver) {
         try {
-            log.info("Получен запрос: \n" + request);
+            log.info("Получен запрос: \n" + request.getAllFields());
             if (hubEventMappers.containsKey(request.getPayloadCase())) {
                 eventService.collectHubEvent(hubEventMappers.get(request.getPayloadCase()).map(request));
             } else {
