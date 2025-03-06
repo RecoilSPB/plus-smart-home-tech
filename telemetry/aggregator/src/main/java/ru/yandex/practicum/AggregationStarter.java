@@ -34,7 +34,7 @@ public class AggregationStarter {
         try {
             Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
             consumer.subscribe(List.of(kafkaConfig.getKafkaProperties().getSensorEventsTopic()));
-            do {
+            while (true) {
                 ConsumerRecords<String, SensorEventAvro> records = consumer
                         .poll(Duration.ofMillis(kafkaConfig.getKafkaProperties().getConsumeAttemptTimeout()));
                 int count = 0;
@@ -45,7 +45,7 @@ public class AggregationStarter {
                     count++;
                 }
                 consumer.commitAsync();
-            } while (true);
+            }
 
         } catch (WakeupException ignores) {
             // игнорируем - закрываем консьюмер и продюсер в блоке finally
@@ -78,12 +78,10 @@ public class AggregationStarter {
                 new OffsetAndMetadata(consumerRecord.offset() + 1)
         );
 
-        if (count % 10 == 0) {
-            consumer.commitAsync(currentOffsets, (offsets, exception) -> {
-                if (exception != null) {
-                    log.warn("Ошибка во время фиксации оффсетов: {}", offsets, exception);
-                }
-            });
-        }
+        consumer.commitAsync(currentOffsets, (offsets, exception) -> {
+            if (exception != null) {
+                log.warn("Ошибка во время фиксации оффсетов: {}", offsets, exception);
+            }
+        });
     }
 }
