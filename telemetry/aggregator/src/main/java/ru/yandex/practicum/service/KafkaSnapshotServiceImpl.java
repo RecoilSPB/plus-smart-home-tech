@@ -26,12 +26,14 @@ public class KafkaSnapshotServiceImpl implements SnapshotService {
 
     @Override
     public Optional<SensorsSnapshotAvro> updateState(SensorEventAvro event) {
+        log.info("event: " + event);
         var snapshotAvro = snapshots.computeIfAbsent(
                 event.getHubId(),
                 this::getNewSensorsSnapshotAvro
         );
 
         var oldState = snapshotAvro.getSensorsState().get(event.getId());
+        log.info("oldState: " + oldState);
         if (oldState != null && oldState.getTimestamp().isAfter(event.getTimestamp()) &&
                 oldState.getData().equals(event.getPayload())) {
             log.debug("State for sensor {} in hub {} is up to date", event.getId(), event.getHubId());
@@ -39,8 +41,11 @@ public class KafkaSnapshotServiceImpl implements SnapshotService {
         }
 
         var newState = getNewSensorsSnapshotAvro(event);
+        log.info("newState: " + newState);
         snapshotAvro.getSensorsState().put(event.getId(), newState);
+        log.info("snapshotAvro: " + snapshotAvro);
         snapshotAvro.setTimestamp(event.getTimestamp());
+        log.info("snapshotAvro: " + snapshotAvro);
         snapshots.put(event.getHubId(), snapshotAvro);
         log.info("Updated state for sensor {} in hub {}", event.getId(), event.getHubId());
         return Optional.of(snapshotAvro);
@@ -48,6 +53,7 @@ public class KafkaSnapshotServiceImpl implements SnapshotService {
 
     @Override
     public void collectSensorSnapshot(SensorsSnapshotAvro sensorsSnapshotAvro) {
+        log.info("sensorsSnapshotAvro: " + sensorsSnapshotAvro);
         ProducerRecord<String, SpecificRecordBase> rec = new ProducerRecord<>(
                 kafkaConfig.getKafkaProperties().getSensorSnapshotsTopic(),
                 null,

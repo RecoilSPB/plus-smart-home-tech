@@ -30,9 +30,9 @@ public class AggregationStarter {
     private final Map<TopicPartition, OffsetAndMetadata> currentOffsets = new HashMap<>();
 
     public void start() {
-        Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
 
         try {
+            Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
             consumer.subscribe(List.of(kafkaConfig.getKafkaProperties().getSensorEventsTopic()));
             do {
                 ConsumerRecords<String, SensorEventAvro> records = consumer
