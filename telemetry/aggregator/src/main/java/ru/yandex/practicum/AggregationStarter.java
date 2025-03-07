@@ -37,10 +37,11 @@ public class AggregationStarter {
             while (true) {
                 ConsumerRecords<String, SensorEventAvro> records = consumer
                         .poll(Duration.ofMillis(kafkaConfig.getKafkaProperties().getConsumeAttemptTimeout()));
+                int count = 0;
                 for (ConsumerRecord<String, SensorEventAvro> record : records) {
                     log.info("Processing record {}", record);
                     handleRecord(record);
-                    manageOffsets(record, consumer);
+                    manageOffsets(record, count, consumer);
                     log.info("End of processing record {}", record);
                 }
                 consumer.commitAsync();
@@ -70,15 +71,17 @@ public class AggregationStarter {
     }
 
     private void manageOffsets(ConsumerRecord<String, SensorEventAvro> consumerRecord,
-                               Consumer<String, SensorEventAvro> consumer) {
+                               int count, Consumer<String, SensorEventAvro> consumer) {
         currentOffsets.put(
                 new TopicPartition(consumerRecord.topic(), consumerRecord.partition()),
                 new OffsetAndMetadata(consumerRecord.offset() + 1)
         );
-        consumer.commitAsync(currentOffsets, (offsets, exception) -> {
-            if (exception != null) {
-                log.warn("Ошибка во время фиксации оффсетов: {}", offsets, exception);
-            }
-        });
+        if (count % 10 == 0) {
+            consumer.commitAsync(currentOffsets, (offsets, exception) -> {
+                if (exception != null) {
+                    log.warn("Ошибка во время фиксации оффсетов: {}", offsets, exception);
+                }
+            });
+        }
     }
 }
