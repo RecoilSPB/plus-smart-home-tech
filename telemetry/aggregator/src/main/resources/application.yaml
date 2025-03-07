@@ -11,3 +11,6 @@ kafka:
     consume-attempt-timeout: 1000
     sensor-events-topic: "telemetry.sensors.v1"
     sensor-snapshots-topic: "telemetry.snapshots.v1"
+logging:
+  file:
+    name: "log/aggregation-service.log"
