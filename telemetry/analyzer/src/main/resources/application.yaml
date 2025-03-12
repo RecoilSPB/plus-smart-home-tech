@@ -4,13 +4,13 @@ kafka:
     bootstrap-servers: localhost:9092
     hub-events-topic: telemetry.hubs.v1
     snapshot-consumer:
-      attempt-timeout: '1000'
+      attempt-timeout: '500'
       group-id: snapshot-analyzer-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       client-id: snapshot-consumer-1
       value-deserializer: ru.yandex.practicum.avro.SensorSnapshotDeserializer
     hub-consumer:
-      attempt-timeout: '1000'
+      attempt-timeout: '2000'
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       client-id: hub-consumer-1
       value-deserializer: ru.yandex.practicum.avro.HubEventDeserializer
@@ -20,7 +20,7 @@ spring:
     driverClassName: org.postgresql.Driver
     password: analyzer
     username: analyzer
-    url: jdbc:postgresql://localhost:5432/analyzer
+    url: jdbc:postgresql://localhost:5433/analyzer
   jpa:
     hibernate:
       ddl-auto: none

@@ -6,6 +6,7 @@ import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.handler.hub.HubEventHandler;
 import ru.yandex.practicum.model.Action;
+import ru.yandex.practicum.model.ActionType;
 import ru.yandex.practicum.model.Scenario;
 import ru.yandex.practicum.grpc.telemetry.event.ActionTypeProto;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceActionProto;
@@ -55,14 +56,17 @@ public class HubEventServiceImpl implements HubEventService {
         String scenarioName = scenario.getName();
 
         for (Action action : scenario.getActions()) {
-            log.info("Actions: {}", action);
+            log.info("Actions: {}", action.getId());
 
             Instant timestamp = Instant.now();
-            DeviceActionProto deviceAction = DeviceActionProto.newBuilder()
+            DeviceActionProto.Builder builder = DeviceActionProto.newBuilder()
                     .setSensorId(action.getSensor().getId())
-                    .setType(ActionTypeProto.valueOf(action.getType().name()))
-                    .setValue(action.getValue())
-                    .build();
+                    .setType(ActionTypeProto.valueOf(action.getType().name()));
+
+            if (action.getType().equals(ActionType.SET_VALUE)){
+                builder.setValue(action.getValue());
+            }
+            DeviceActionProto deviceAction = builder.build();
 
             DeviceActionRequest request = DeviceActionRequest.newBuilder()
                     .setHubId(hubId)
