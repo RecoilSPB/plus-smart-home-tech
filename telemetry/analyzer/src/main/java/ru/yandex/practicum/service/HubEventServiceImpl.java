@@ -22,8 +22,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class HubEventServiceImpl implements HubEventService {
+
     @GrpcClient("hub-router")
-    HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient;
+    private HubRouterControllerGrpc.HubRouterControllerBlockingStub hubRouterClient;
+
     private final Map<String, HubEventHandler> hubEventHandlers;
 
     public HubEventServiceImpl(Set<HubEventHandler> hubEventHandlers) {
@@ -35,40 +37,49 @@ public class HubEventServiceImpl implements HubEventService {
     }
 
     @Override
-    public void process(HubEventAvro hubEventAvro) {
-        log.info("start process for {}", hubEventAvro);
-        String type = hubEventAvro.getPayload().getClass().getName();
-        if (hubEventHandlers.containsKey(type)) {
-            log.info("process {}", hubEventHandlers.get(type));
-            hubEventHandlers.get(type).handle(hubEventAvro);
+    public void process(HubEventAvro hubEvent) {
+        log.info("Начало обработки события: {}", hubEvent);
+        String eventType = hubEvent.getPayload().getClass().getName();
+        if (hubEventHandlers.containsKey(eventType)) {
+            log.info("Обработка события с помощью обработчика: {}", hubEventHandlers.get(eventType));
+            hubEventHandlers.get(eventType).handle(hubEvent);
         } else {
-            throw new IllegalArgumentException("Не могу найти обработчик для события " + type);
+            throw new IllegalArgumentException("Не удалось найти обработчик для события типа: " + eventType);
         }
     }
 
     @Override
     public void sendActionsByScenario(Scenario scenario) {
-        log.info("send scenario: {} with {} actions", scenario, scenario.getActions().size());
+        log.info("Отправка сценария: {} с {} действиями", scenario.getName(), scenario.getActions().size());
         String hubId = scenario.getHubId();
         String scenarioName = scenario.getName();
+
         for (Action action : scenario.getActions()) {
-            Instant ts = Instant.now();
-            DeviceActionProto deviceActionProto = DeviceActionProto.newBuilder()
+            // Проверка на null для action.getValue()
+            Integer actionValue = action.getValue();
+            if (actionValue == null) {
+                log.warn("Значение действия равно null для сенсора: {}. Действие будет пропущено.", action.getSensor().getId());
+                continue; // Пропустить это действие
+            }
+
+            Instant timestamp = Instant.now();
+            DeviceActionProto deviceAction = DeviceActionProto.newBuilder()
                     .setSensorId(action.getSensor().getId())
                     .setType(ActionTypeProto.valueOf(action.getType().name()))
-                    .setValue(action.getValue())
+                    .setValue(actionValue) // Используем проверенное значение
                     .build();
-            DeviceActionRequest deviceActionRequest = DeviceActionRequest.newBuilder()
+
+            DeviceActionRequest request = DeviceActionRequest.newBuilder()
                     .setHubId(hubId)
                     .setScenarioName(scenarioName)
                     .setTimestamp(Timestamp.newBuilder()
-                            .setSeconds(ts.getEpochSecond())
-                            .setNanos(ts.getNano()))
-                    .setAction(deviceActionProto)
+                            .setSeconds(timestamp.getEpochSecond())
+                            .setNanos(timestamp.getNano()))
+                    .setAction(deviceAction)
                     .build();
-            hubRouterClient.handleDeviceAction(deviceActionRequest);
-            log.info("action was sent: {}", deviceActionRequest);
-        }
 
+            hubRouterClient.handleDeviceAction(request);
+            log.info("Действие отправлено: {}", request);
+        }
     }
 }
