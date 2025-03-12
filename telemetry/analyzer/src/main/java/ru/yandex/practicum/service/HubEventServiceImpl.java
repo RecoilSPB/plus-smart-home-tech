@@ -55,18 +55,13 @@ public class HubEventServiceImpl implements HubEventService {
         String scenarioName = scenario.getName();
 
         for (Action action : scenario.getActions()) {
-            // Проверка на null для action.getValue()
-            Integer actionValue = action.getValue();
-            if (actionValue == null) {
-                log.warn("Значение действия равно null для сенсора: {}. Действие будет пропущено.", action.getSensor().getId());
-                continue; // Пропустить это действие
-            }
+            log.info("Actions: {}", action);
 
             Instant timestamp = Instant.now();
             DeviceActionProto deviceAction = DeviceActionProto.newBuilder()
                     .setSensorId(action.getSensor().getId())
                     .setType(ActionTypeProto.valueOf(action.getType().name()))
-                    .setValue(actionValue) // Используем проверенное значение
+                    .setValue(action.getValue())
                     .build();
 
             DeviceActionRequest request = DeviceActionRequest.newBuilder()

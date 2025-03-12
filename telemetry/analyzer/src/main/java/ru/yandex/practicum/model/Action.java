@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 public class Action {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
