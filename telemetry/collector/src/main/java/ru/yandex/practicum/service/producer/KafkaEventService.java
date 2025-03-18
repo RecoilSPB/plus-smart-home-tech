@@ -16,7 +16,7 @@ import ru.yandex.practicum.service.EventService;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KafkaProducerService implements EventService {
+public class KafkaEventService implements EventService {
     private final Producer<String, SpecificRecordBase> producer;
     private final KafkaConfig kafkaConfig;
 

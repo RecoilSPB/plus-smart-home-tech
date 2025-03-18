@@ -9,8 +9,8 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import ru.yandex.practicum.grpc.telemetry.collector.CollectorControllerGrpc;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
-import ru.yandex.practicum.mapper.proto.HubEventProtoMapper;
-import ru.yandex.practicum.mapper.proto.SensorEventProtoMapper;
+import ru.yandex.practicum.mapper.proto.hubs.HubEventProtoMapper;
+import ru.yandex.practicum.mapper.proto.sensors.SensorEventProtoMapper;
 import ru.yandex.practicum.service.EventService;
 
 import java.util.Map;
