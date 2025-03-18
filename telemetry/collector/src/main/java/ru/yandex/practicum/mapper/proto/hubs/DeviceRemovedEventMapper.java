@@ -1,4 +1,4 @@
-package ru.yandex.practicum.mapper.proto;
+package ru.yandex.practicum.mapper.proto.hubs;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.model.hubs.DeviceRemovedEvent;

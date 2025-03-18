@@ -12,5 +12,6 @@ public class KafkaConsumerSettings {
         private String clientId;
         private String keyDeserializer;
         private String valueDeserializer;
+        private Boolean autoCommit;
         private long attemptTimeout;
 }

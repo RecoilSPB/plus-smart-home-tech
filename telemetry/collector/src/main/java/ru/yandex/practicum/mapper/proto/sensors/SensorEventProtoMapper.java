@@ -1,4 +1,4 @@
-package ru.yandex.practicum.mapper.proto;
+package ru.yandex.practicum.mapper.proto.sensors;
 
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.model.sensors.SensorEvent;

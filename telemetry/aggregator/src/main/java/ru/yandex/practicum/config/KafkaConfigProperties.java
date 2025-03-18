@@ -21,6 +21,7 @@ public class KafkaConfigProperties {
     String consumerClientIdConfig;
     String consumerKeyDeserializer;
     String consumerValueDeserializer;
+    Boolean consumerAutoCommit;
     long consumeAttemptTimeout;
 
     String sensorEventsTopic;

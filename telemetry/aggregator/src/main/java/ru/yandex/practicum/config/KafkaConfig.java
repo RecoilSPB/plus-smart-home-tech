@@ -42,7 +42,7 @@ public class KafkaConfig {
         props.put(ConsumerConfig.CLIENT_ID_CONFIG, kafkaProperties.getConsumerClientIdConfig());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaProperties.getConsumerKeyDeserializer());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaProperties.getConsumerValueDeserializer());
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, kafkaProperties.getConsumerAutoCommit());
         return new KafkaConsumer<>(props);
     }
 }

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.mapper.proto;
+package ru.yandex.practicum.mapper.proto.sensors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
