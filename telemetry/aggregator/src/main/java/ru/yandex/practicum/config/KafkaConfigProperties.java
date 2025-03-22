@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "kafka.config")
+@ConfigurationProperties(prefix = "aggregator.kafka.config")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class KafkaConfigProperties {
     String bootstrapServers;
