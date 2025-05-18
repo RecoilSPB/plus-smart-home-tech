@@ -13,6 +13,7 @@ import ru.yandex.practicum.repository.ProductRepository;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,14 +22,23 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     private final ProductMapper productMapper;
 
     @Override
-    public List<ProductDto> getProducts(ProductCategory category, Pageable pageable) {
-        Sort sort = Sort.by(pageable.getSort().getFirst());
-        PageRequest page = PageRequest.of(pageable.getPage(), pageable.getSize(), sort);
+    public ProductsDto getProducts(ProductCategory category, Pageable pageable) {
 
-        return productRepository.findAllByProductCategory(category, page)
+        PageRequest pageRequest = pageable.toPageRequest();
+
+        List<ProductDto> list = productRepository.findAllByProductCategory(category, pageRequest)
                 .stream()
                 .map(productMapper::map)
                 .toList();
+
+        ProductsDto result = new ProductsDto();
+        result.setContent(list);
+        List<SortInfo> sortInfoList = pageRequest.getSort().stream()
+                .map(order -> new SortInfo(order.getProperty(), order.getDirection().name()))
+                .collect(Collectors.toList());
+        result.setSort(sortInfoList);
+
+        return result;
     }
 
     @Override
@@ -47,19 +57,25 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
     @Override
     @Transactional
     public ProductDto updateProduct(ProductDto productDto) {
-        Product product = getProduct(productDto.getId());
+        Product product = getProductByProductName(productDto.getProductName());
+        if (product == null) {
+            Product newProduct = productMapper.map(productDto);
+            Product save = productRepository.save(newProduct);
+            return productMapper.map(save);
+        }
         productMapper.update(productDto, product);
         return productMapper.map(productRepository.save(product));
     }
 
     @Override
     @Transactional
-    public boolean updateQuantityState(SetProductQuantityStateRequest stateRequest) {
-        Product product = getProduct(stateRequest.getProductId());
-        product.setQuantityState(stateRequest.getQuantityState());
-        productRepository.save(product);
+    public ProductDto updateQuantityState(UUID productId, QuantityState quantityState) {
+        Product product = getProduct(productId);
+        product.setQuantityState(quantityState);
+        Product saveProduct = productRepository.save(product);
+        ProductDto dto = productMapper.map(saveProduct);
 
-        return true;
+        return dto;
     }
 
     @Override
@@ -76,5 +92,9 @@ public class ShoppingStoreServiceImpl implements ShoppingStoreService {
         return productRepository.findById(productId).orElseThrow(() -> new NotFoundException(
                 String.format("Ошибка, товар по идентификатору %s в БД не найден", productId))
         );
+    }
+
+    private Product getProductByProductName(String productName) {
+        return productRepository.findByProductName(productName);
     }
 }

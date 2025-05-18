@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.client.ShoppingStoreClient;
 import ru.yandex.practicum.dto.*;
+import ru.yandex.practicum.model.Product;
 import ru.yandex.practicum.service.ShoppingStoreService;
 
 import java.util.List;
@@ -18,9 +19,8 @@ public class ShoppingStoreController implements ShoppingStoreClient {
 
     @GetMapping
     @Override
-    public List<ProductDto> getProducts(
-            @RequestParam @NotNull ProductCategory category, 
-            Pageable pageable) {
+    public ProductsDto getProducts(
+            @RequestParam @NotNull ProductCategory category, Pageable pageable) {
         return shoppingStoreService.getProducts(category, pageable);
     }
 
@@ -42,16 +42,21 @@ public class ShoppingStoreController implements ShoppingStoreClient {
         return shoppingStoreService.updateProduct(productDto);
     }
 
-    @DeleteMapping("/{productId}")
     @Override
+    @DeleteMapping("/{productId}")
     public void removeProduct(@PathVariable UUID productId) {
         shoppingStoreService.removeProduct(productId);
     }
 
-    @PatchMapping("/quantity")
+    @PostMapping("/removeProductFromStore")
+    public void removeProductFromStore(@RequestBody UUID productId) {
+        shoppingStoreService.removeProduct(productId);
+    }
+
+    @PostMapping("/quantityState")
     @Override
-    public void updateQuantityState(
-            @RequestBody SetProductQuantityStateRequest request) {
-        shoppingStoreService.updateQuantityState(request);
+    public ProductDto updateQuantityState(@RequestParam UUID productId,
+                                          @RequestParam QuantityState quantityState) {
+        return shoppingStoreService.updateQuantityState(productId, quantityState);
     }
 }
