@@ -14,5 +14,5 @@ public class ShoppingCartDto {
     UUID id;
     
     @NotEmpty(message = "Products map cannot be empty")
-    Map<UUID, Integer> products;
+    Map<UUID, Long> products;
 }

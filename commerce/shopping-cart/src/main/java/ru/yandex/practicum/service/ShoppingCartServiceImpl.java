@@ -25,7 +25,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartDto getCart(String userName) {
-        return shoppingCartMapper.map(getCartOrThrow(userName));
+        ShoppingCart cartOrThrow = getCartOrThrow(userName);
+        ShoppingCartDto map = shoppingCartMapper.map(cartOrThrow);
+        return map;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         cart.getItems().compute(request.getProductId(),
-                (k, v) -> request.getQuantity());
+                (k, v) -> request.getNewQuantity());
 
         return shoppingCartMapper.map(shoppingCartRepository.save(cart));
     }

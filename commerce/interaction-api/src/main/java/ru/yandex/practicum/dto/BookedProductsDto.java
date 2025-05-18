@@ -1,13 +1,12 @@
 package ru.yandex.practicum.dto;
 
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Builder;
-import lombok.Value;
-import lombok.With;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Value
-@Builder
-@With
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookedProductsDto {
     @PositiveOrZero(message = "Delivery weight must be positive or zero")
     Double deliveryWeight;

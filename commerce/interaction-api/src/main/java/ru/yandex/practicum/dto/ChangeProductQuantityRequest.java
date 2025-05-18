@@ -15,5 +15,5 @@ public class ChangeProductQuantityRequest {
     private UUID productId;
 
     @NotNull(message = "Quantity cannot be null")
-    private Long quantity;
+    private Long newQuantity;
 }

@@ -16,7 +16,7 @@ public class NewProductInWarehouseRequest {
     private boolean fragile;
     
     @NotNull(message = "Dimensions are required")
-    private DimensionDto dimensions;
+    private DimensionDto dimension;
     
     @NotNull(message = "Weight is required")
     @DecimalMin(value = "0.1", message = "Weight must be at least 0.1 kg")

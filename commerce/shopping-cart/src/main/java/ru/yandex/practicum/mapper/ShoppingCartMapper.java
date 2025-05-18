@@ -11,6 +11,6 @@ public interface ShoppingCartMapper {
     @Mapping(target = "userName", source = "userName")
     ShoppingCart map(ShoppingCartDto dto, String userName);
 
-//    @Mapping(target = "items", source = "products")
+    @Mapping(target = "products", source = "items")
     ShoppingCartDto map(ShoppingCart entity);
 }
