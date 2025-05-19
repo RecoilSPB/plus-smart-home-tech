@@ -5,10 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.client.ShoppingStoreClient;
 import ru.yandex.practicum.dto.*;
-import ru.yandex.practicum.model.Product;
 import ru.yandex.practicum.service.ShoppingStoreService;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,13 +28,13 @@ public class ShoppingStoreController implements ShoppingStoreClient {
         return shoppingStoreService.getProductById(productId);
     }
 
-    @PostMapping
+    @PutMapping
     @Override
     public ProductDto createProduct(@RequestBody ProductDto productDto) {
         return shoppingStoreService.createProduct(productDto);
     }
 
-    @PutMapping
+    @PostMapping
     @Override
     public ProductDto updateProduct(@RequestBody ProductDto productDto) {
         return shoppingStoreService.updateProduct(productDto);
