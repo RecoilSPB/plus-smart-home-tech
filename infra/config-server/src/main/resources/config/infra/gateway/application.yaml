@@ -1,0 +1,30 @@
+spring:
+  cloud:
+    gateway:
+      discovery.locator.enabled: true
+      routes:
+        - id: shopping_cart_circuitbreaker_route
+          uri: lb://shopping-cart
+          predicates:
+            - Path=/api/v1/shopping-cart/**
+        - id: shopping_store_circuitbreaker_route
+          uri: lb://shopping-store
+          predicates:
+            - Path=/api/v1/shopping-store/**
+
+server:
+  port: 8080
+
+logging:
+  level:
+    # Основные логи Gateway
+    org.springframework.cloud.gateway: INFO
+    # Логи маршрутизации
+    org.springframework.web.reactive: INFO
+    org.springframework.http.server.reactive: INFO
+    # Логи Netty (подсистема сети)
+    reactor.netty: INFO
+    # Логи балансировки нагрузки
+    org.springframework.cloud.loadbalancer: INFO
+    # Логи Eureka (если используется)
+    com.netflix.discovery: INFO
