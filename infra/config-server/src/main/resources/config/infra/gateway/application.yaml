@@ -3,14 +3,18 @@ spring:
     gateway:
       discovery.locator.enabled: true
       routes:
-        - id: shopping_cart_circuitbreaker_route
+        - id: shopping_cart
           uri: lb://shopping-cart
           predicates:
             - Path=/api/v1/shopping-cart/**
-        - id: shopping_store_circuitbreaker_route
+        - id: shopping_store
           uri: lb://shopping-store
           predicates:
             - Path=/api/v1/shopping-store/**
+        - id: warehouse
+          uri: lb://warehouse
+          predicates:
+            - Path=/api/v1/warehouse/**
 
 server:
   port: 8080
