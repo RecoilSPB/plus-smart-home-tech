@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yandex.practicum.client.WarehouseClient;
-import ru.yandex.practicum.dto.*;
+import ru.yandex.practicum.warehouse.client.WarehouseClient;
+import ru.yandex.practicum.shoppingCart.dto.*;
 import ru.yandex.practicum.exception.NoProductsException;
 import ru.yandex.practicum.exception.NotFoundException;
 import ru.yandex.practicum.mapper.ShoppingCartMapper;
@@ -26,8 +26,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto getCart(String userName) {
         ShoppingCart cartOrThrow = getCartOrThrow(userName);
-        ShoppingCartDto map = shoppingCartMapper.map(cartOrThrow);
-        return map;
+        return shoppingCartMapper.map(cartOrThrow);
     }
 
     @Override
