@@ -18,6 +18,8 @@ import ru.yandex.practicum.repository.DeliveryRepository;
 import ru.yandex.practicum.utils.DeliveryUtil;
 import ru.yandex.practicum.warehouse.client.WarehouseClient;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 @Slf4j
@@ -72,39 +74,69 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public Double calculateDeliveryCost(OrderDto orderDto) {
+    public BigDecimal calculateDeliveryCost(OrderDto orderDto) {
+        if (orderDto == null) {
+            throw new IllegalArgumentException("OrderDto cannot be null");
+        }
+
         Delivery delivery = getDeliveryByOrderId(orderDto.getOrderId());
+        if (delivery == null) {
+            throw new IllegalArgumentException("Delivery not found for orderId: " + orderDto.getOrderId());
+        }
+
         log.info("delivery for calc cost: {}", delivery);
-        double cost = DeliveryUtil.BASE_DELIVERY_PRICE;
-        cost += DeliveryUtil.BASE_DELIVERY_PRICE * getCoefByFromAddress(delivery.getSenderAddress());
-        cost *= getFragileCoefficient(orderDto.isFragile());
-        cost += orderDto.getDeliveryWeight() * WEIGHT_RATE;
-        cost += orderDto.getDeliveryVolume() * VOLUME_RATE;
-        cost *= getCoefByToAddress(delivery.getSenderAddress(), delivery.getRecipientAddress());
-        return cost;
+
+        // Инициализируем базовую стоимость доставки
+        BigDecimal cost = BigDecimal.valueOf(DeliveryUtil.BASE_DELIVERY_PRICE);
+
+        // Добавляем коэффициент от адреса отправителя
+        BigDecimal fromAddressCoef = getCoefByFromAddress(delivery.getSenderAddress());
+        cost = cost.add(BigDecimal.valueOf(DeliveryUtil.BASE_DELIVERY_PRICE).multiply(fromAddressCoef));
+
+        // Применяем коэффициент хрупкости
+        BigDecimal fragileCoef = getFragileCoefficient(orderDto.isFragile());
+        cost = cost.multiply(fragileCoef);
+
+        // Добавляем стоимость за вес
+        BigDecimal weightCost = BigDecimal.valueOf(orderDto.getDeliveryWeight())
+                .multiply(BigDecimal.valueOf(WEIGHT_RATE));
+        cost = cost.add(weightCost);
+
+        // Добавляем стоимость за объем
+        BigDecimal volumeCost = BigDecimal.valueOf(orderDto.getDeliveryVolume())
+                .multiply(BigDecimal.valueOf(VOLUME_RATE));
+        cost = cost.add(volumeCost);
+
+        // Применяем коэффициент расстояния между адресами
+        BigDecimal distanceCoef = getCoefByToAddress(delivery.getSenderAddress(), delivery.getRecipientAddress());
+        cost = cost.multiply(distanceCoef);
+
+        // Округляем до 2 знаков (копеек)
+        return cost.setScale(2, RoundingMode.HALF_UP);
     }
 
-    double getCoefByFromAddress(Address address) {
+    BigDecimal getCoefByFromAddress(Address address) {
         String addressStr = address.toString();
         if (addressStr.contains("ADDRESS_1")) {
-            return DeliveryUtil.ADDRESS_1_ADDRESS_COEF;
+            return BigDecimal.valueOf(DeliveryUtil.ADDRESS_1_ADDRESS_COEF);
         } else if (addressStr.contains("ADDRESS_2")) {
-            return DeliveryUtil.ADDRESS_2_ADDRESS_COEF;
+            return BigDecimal.valueOf(DeliveryUtil.ADDRESS_2_ADDRESS_COEF);
         } else {
-            return DeliveryUtil.BASE_ADDRESS_COEF;
+            return BigDecimal.valueOf(DeliveryUtil.BASE_ADDRESS_COEF);
         }
     }
 
-    double getCoefByToAddress(Address from, Address to) {
+    BigDecimal getCoefByToAddress(Address from, Address to) {
         if (!from.getStreet().equals(to.getStreet())) {
-            return DeliveryUtil.DIFF_STREET_ADDRESS_COEF;
+            return BigDecimal.valueOf(DeliveryUtil.DIFF_STREET_ADDRESS_COEF);
         }
 
-        return 1.0;
+        return BigDecimal.valueOf(1.0);
     }
 
-    double getFragileCoefficient(boolean isFragile) {
-        return isFragile ? DeliveryUtil.FRAGILE_COEF : 1.0;
+    BigDecimal getFragileCoefficient(boolean isFragile) {
+        double val = isFragile ? DeliveryUtil.FRAGILE_COEF : 1.0;
+        return BigDecimal.valueOf(val);
     }
 
     private Delivery getDeliveryByOrderId(UUID orderId) {

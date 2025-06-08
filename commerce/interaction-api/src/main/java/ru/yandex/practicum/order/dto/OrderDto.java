@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.order.enums.OrderStatus;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -28,7 +29,7 @@ public class OrderDto {
     Double deliveryWeight;
     Double deliveryVolume;
     boolean fragile;
-    Double totalPrice;
-    Double deliveryPrice;
-    Double productPrice;
+    BigDecimal totalPrice;
+    BigDecimal deliveryPrice;
+    BigDecimal productPrice;
 }

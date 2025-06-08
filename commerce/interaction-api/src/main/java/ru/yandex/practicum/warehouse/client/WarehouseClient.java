@@ -2,6 +2,7 @@ package ru.yandex.practicum.warehouse.client;
 
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import ru.yandex.practicum.warehouse.dto.*;
 import java.util.Map;
 import java.util.UUID;
 
+@Validated
 @FeignClient(name = "warehouse")
 public interface WarehouseClient {
     String CHECK_ENDPOINT = "/api/v1/warehouse/check";

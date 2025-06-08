@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -24,9 +25,9 @@ public class Payment {
     @Enumerated(value = EnumType.STRING)
     PaymentState state;
     @Column(name = "total_cost")
-    Double totalPayment;
+    BigDecimal totalPayment;
     @Column(name = "delivery_cost")
-    Double deliveryTotal;
+    BigDecimal deliveryTotal;
     @Column(name = "fee_cost")
-    Double feeTotal;
+    BigDecimal feeTotal;
 }

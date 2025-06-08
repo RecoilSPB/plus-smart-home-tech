@@ -3,6 +3,7 @@ package ru.yandex.practicum.shoppingCart.client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.shoppingCart.dto.BookedProductsDto;
 import ru.yandex.practicum.shoppingCart.dto.ChangeProductQuantityRequest;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Validated
 @FeignClient(name = "shopping-cart")
 public interface ShoppingCartClient {
     String USERNAME_PARAM = "username";

@@ -17,6 +17,7 @@ import ru.yandex.practicum.shoppingStore.client.ShoppingStoreClient;
 import ru.yandex.practicum.shoppingStore.dto.ProductDto;
 import ru.yandex.practicum.utils.PaymentUtil;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
@@ -40,7 +41,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Double getTotalCost(OrderDto order) {
+    public BigDecimal getTotalCost(OrderDto order) {
         return calcTotalCost(order);
     }
 
@@ -52,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Double getProductCost(OrderDto order) {
+    public BigDecimal getProductCost(OrderDto order) {
         return calcProductsCost(order);
     }
 
@@ -76,7 +77,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private Payment getNewPayment(OrderDto order) {
-        double fee = calcFeeCost(order.getProductPrice());
+        BigDecimal fee = calcFeeCost(order.getProductPrice());
         return Payment.builder()
                 .orderId(order.getOrderId())
                 .state(PaymentState.PENDING)
@@ -86,32 +87,54 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
     }
 
-    private double calcTotalCost(OrderDto order) {
-        double productCost = calcProductsCost(order);
-        double deliveryCost = order.getDeliveryPrice();
+    private BigDecimal calcTotalCost(OrderDto order) {
+        BigDecimal productCost = calcProductsCost(order);
+        BigDecimal deliveryCost = order.getDeliveryPrice();
 
-        return productCost + calcFeeCost(productCost) + deliveryCost;
+        return productCost.add(calcFeeCost(productCost)).add(deliveryCost);
     }
 
-    private double calcProductsCost(OrderDto order) {
-        double cost = 0;
+    private BigDecimal calcProductsCost(OrderDto order) {
+        if (order == null || order.getProducts() == null) {
+            throw new IllegalArgumentException("Order and products cannot be null");
+        }
 
+        if (order.getProducts().isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        // Получаем продукты из хранилища
         Map<UUID, ProductDto> products = shoppingStoreClient.getProductByIds(order.getProducts().keySet())
                 .stream()
                 .collect(Collectors.toMap(ProductDto::getProductId, Function.identity()));
+
+        BigDecimal totalCost = BigDecimal.ZERO;
+
         for (Map.Entry<UUID, Integer> orderProduct : order.getProducts().entrySet()) {
+            UUID productId = orderProduct.getKey();
             int quantity = orderProduct.getValue();
-            if (!products.containsKey(orderProduct.getKey())) {
-                throw new NotEnoughInfoInOrderToCalculateException("Недостаточно информации в заказе для расчёта");
+
+            if (!products.containsKey(productId)) {
+                throw new NotEnoughInfoInOrderToCalculateException(
+                        "Недостаточно информации в заказе для расчёта: продукт " + productId + " не найден"
+                );
             }
-            double price = products.get(orderProduct.getKey()).getPrice();
-            cost += price * quantity;
+
+            ProductDto product = products.get(productId);
+            if (product.getPrice() == null) {
+                throw new NotEnoughInfoInOrderToCalculateException(
+                        "Цена продукта " + productId + " не указана"
+                );
+            }
+
+            BigDecimal productCost = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+            totalCost = totalCost.add(productCost);
         }
 
-        return cost;
+        return totalCost;
     }
 
-    private double calcFeeCost(double cost) {
-        return cost * PaymentUtil.BASE_VAT_RATE;
+    private BigDecimal calcFeeCost(BigDecimal cost) {
+        return cost.multiply(BigDecimal.valueOf(PaymentUtil.BASE_VAT_RATE));
     }
 }

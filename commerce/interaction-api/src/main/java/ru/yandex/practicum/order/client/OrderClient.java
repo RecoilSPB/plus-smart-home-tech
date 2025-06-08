@@ -1,8 +1,10 @@
 package ru.yandex.practicum.order.client;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.order.dto.OrderCreateRequest;
 import ru.yandex.practicum.order.dto.OrderDto;
@@ -12,6 +14,7 @@ import ru.yandex.practicum.utils.ValidationUtil;
 import java.util.List;
 import java.util.UUID;
 
+@Validated
 @FeignClient(name = "order", path = "/api/v1/order")
 public interface OrderClient {
     @GetMapping
@@ -21,10 +24,10 @@ public interface OrderClient {
             String userName);
 
     @PutMapping
-    OrderDto createNewOrder(@RequestBody OrderCreateRequest request);
+    OrderDto createNewOrder(@RequestBody @Valid OrderCreateRequest request);
 
     @PostMapping("/return")
-    OrderDto returnProducts(@RequestBody ProductReturnRequest request);
+    OrderDto returnProducts(@RequestBody @Valid ProductReturnRequest request);
 
     @PostMapping("/payment")
     OrderDto payOrder(@RequestBody @NotNull UUID orderId);

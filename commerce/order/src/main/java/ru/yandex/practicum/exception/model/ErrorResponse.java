@@ -10,11 +10,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
-    Throwable cause;
-    StackTraceElement[] stackTrace;
     HttpStatus httpstatus;
     String userMessage;
     String message;
-    Throwable[] suppressed;
-    String localizedMessage;
 }

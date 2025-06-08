@@ -1,8 +1,8 @@
 package ru.yandex.practicum.shoppingStore.client;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.shoppingStore.dto.Pageable;
 import ru.yandex.practicum.shoppingStore.dto.ProductDto;
@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+@Validated
 @FeignClient(name = "shopping-store")
 public interface ShoppingStoreClient {
     String BASE_PATH = "";
@@ -21,7 +22,7 @@ public interface ShoppingStoreClient {
     String QUANTITY_STATE_PATH = "/quantityState";
 
     @GetMapping(BASE_PATH)
-    ProductsDto getProducts(@RequestParam @NotNull ProductCategory category, Pageable pageable);
+    ProductsDto getProducts(@RequestParam @Valid ProductCategory category, Pageable pageable);
 
     @GetMapping("/{productId}")
     ProductDto getProduct(@PathVariable UUID productId);

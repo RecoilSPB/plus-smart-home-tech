@@ -9,6 +9,7 @@ import ru.yandex.practicum.model.Order;
 import ru.yandex.practicum.order.enums.OrderStatus;
 import ru.yandex.practicum.repository.OrderRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -77,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order setTotalPrice(UUID orderId, double totalCost) {
+    public Order setTotalPrice(UUID orderId, BigDecimal totalCost) {
         Order order = findOrderById(orderId);
         order.setTotalPrice(totalCost);
 
@@ -86,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order setDeliveryPrice(UUID orderId, double deliveryCost) {
+    public Order setDeliveryPrice(UUID orderId, BigDecimal deliveryCost) {
         Order order = findOrderById(orderId);
         order.setDeliveryPrice(deliveryCost);
 

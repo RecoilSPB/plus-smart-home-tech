@@ -14,6 +14,7 @@ import ru.yandex.practicum.shoppingStore.enums.ProductCategory;
 import ru.yandex.practicum.shoppingStore.enums.ProductState;
 import ru.yandex.practicum.shoppingStore.enums.QuantityState;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -49,5 +50,5 @@ public class ProductDto {
     
     @NotNull(message = "Price must be specified")
     @DecimalMin(value = "0.01", message = "Price must be at least 0.01")
-    Double price;
+    BigDecimal price;
 }
