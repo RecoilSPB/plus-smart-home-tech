@@ -1,13 +1,20 @@
 package ru.yandex.practicum.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.client.ShoppingStoreClient;
-import ru.yandex.practicum.dto.*;
 import ru.yandex.practicum.service.ShoppingStoreService;
+import ru.yandex.practicum.shoppingStore.client.ShoppingStoreClient;
+import ru.yandex.practicum.shoppingStore.dto.Pageable;
+import ru.yandex.practicum.shoppingStore.dto.ProductDto;
+import ru.yandex.practicum.shoppingStore.dto.ProductsDto;
+import ru.yandex.practicum.shoppingStore.dto.SetProductQuantityStateRequest;
+import ru.yandex.practicum.shoppingStore.enums.ProductCategory;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -55,8 +62,13 @@ public class ShoppingStoreController implements ShoppingStoreClient {
 
     @PostMapping("/quantityState")
     @Override
-    public ProductDto updateQuantityState(@RequestParam UUID productId,
-                                          @RequestParam QuantityState quantityState) {
-        return shoppingStoreService.updateQuantityState(productId, quantityState);
+    public ProductDto updateQuantityState(@RequestBody @Valid SetProductQuantityStateRequest request) {
+        return shoppingStoreService.updateQuantityState(request);
+    }
+
+    @Override
+    @GetMapping("/onlyIds")
+    public List<ProductDto> getProductByIds(@RequestParam Collection<UUID> ids) {
+        return shoppingStoreService.getProductByIds(ids);
     }
 }

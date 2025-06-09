@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.client.ShoppingCartClient;
-import ru.yandex.practicum.dto.BookedProductsDto;
-import ru.yandex.practicum.dto.ChangeProductQuantityRequest;
-import ru.yandex.practicum.dto.ShoppingCartDto;
 import ru.yandex.practicum.service.ShoppingCartService;
+import ru.yandex.practicum.shoppingCart.client.ShoppingCartClient;
+import ru.yandex.practicum.shoppingCart.dto.BookedProductsDto;
+import ru.yandex.practicum.shoppingCart.dto.ChangeProductQuantityRequest;
+import ru.yandex.practicum.shoppingCart.dto.ShoppingCartDto;
 import ru.yandex.practicum.utils.ValidationUtil;
 
 import java.util.List;

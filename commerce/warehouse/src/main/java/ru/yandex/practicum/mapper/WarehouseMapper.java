@@ -3,8 +3,8 @@ package ru.yandex.practicum.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import ru.yandex.practicum.dto.NewProductInWarehouseRequest;
 import ru.yandex.practicum.model.WarehouseProduct;
+import ru.yandex.practicum.warehouse.dto.NewProductInWarehouseRequest;
 
 @Mapper(componentModel = "spring",
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
